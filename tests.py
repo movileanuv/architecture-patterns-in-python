@@ -65,10 +65,15 @@ class BatchSelectionTests(unittest.TestCase):
 
 class BatchTests(unittest.TestCase):
     def test_available_quantity(self):
-        pass
+        line_1 = OrderLine(orderid="order-001", sku="TABLE", quantity=2)
+        line_2 = OrderLine(orderid="order-001", sku="TABLE", quantity=5)
+        batch = Batch(reference="batch-001", sku="TABLE", quantity=10, lines=[line_1, line_2], eta=0)
+        self.assertEqual(3, batch.available_quantity)
 
     def test_warehouse_stock_is_true_if_eta_is_zero(self):
-        pass
+        batch = Batch(reference="batch-001", sku="TABLE", quantity=10, lines=[], eta=0)
+        self.assertEqual(True, batch.warehouse_stock)
 
     def test_warehouse_stock_is_false_if_eta_is_not_zero(self):
-        pass
+        batch = Batch(reference="batch-001", sku="TABLE", quantity=10, lines=[], eta=10)
+        self.assertEqual(False, batch.warehouse_stock)
