@@ -26,7 +26,7 @@ class AllocationTests(unittest.TestCase):
             allocate(order_line_2, self.batch)
 
     def test_allocate_line_to_corresponding_batch_with_sufficient_quantity_is_successful(self):
-        order_line = OrderLine(order=self.order, sku="A", quantity=2)
+        order_line = OrderLine(order=self.order, sku="SMALL-TABLE", quantity=2)
         allocate(order_line, self.batch)
         self.assertEqual(0, self.batch.available_quantity)
 
