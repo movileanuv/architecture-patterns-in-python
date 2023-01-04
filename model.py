@@ -38,6 +38,12 @@ class Batch:
     lines: List[OrderLine]
     eta: int
 
+    def __eq__(self, other):
+        return other.reference == self.reference if isinstance(other, Batch) else False
+
+    def __hash__(self):
+        return hash(self.reference)
+
     @property
     def warehouse_stock(self):
         return self.eta == 0
