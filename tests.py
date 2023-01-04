@@ -14,8 +14,16 @@ class AllocationTests(unittest.TestCase):
             allocate(order_line, self.batch)
 
     def test_allocate_line_to_batch_with_not_enough_quantity_fails(self):
-        order_line = OrderLine(order=self.order, sku="A", quantity=3)
-        self.assertRaises(AllocationError, allocate(order_line, self.batch))
+        order_line = OrderLine(order=self.order, sku="SMALL-TABLE", quantity=3)
+        with self.assertRaises(AllocationError):
+            allocate(order_line, self.batch)
+
+    def test_allocate_line_to_batch_with_not_enough_quantity_fails_2(self):
+        order_line_1 = OrderLine(order=self.order, sku="SMALL-TABLE", quantity=1)
+        allocate(order_line_1, self.batch)
+        order_line_2 = OrderLine(order=self.order, sku="SMALL-TABLE", quantity=2)
+        with self.assertRaises(AllocationError):
+            allocate(order_line_2, self.batch)
 
     def test_allocate_line_to_corresponding_batch_with_sufficient_quantity_is_successful(self):
         order_line = OrderLine(order=self.order, sku="A", quantity=2)
