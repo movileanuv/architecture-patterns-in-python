@@ -1,3 +1,4 @@
+import contextlib
 from dataclasses import dataclass
 
 from typing import List
@@ -44,6 +45,12 @@ class Batch:
     def __hash__(self):
         return hash(self.reference)
 
+    def __gt__(self, other):
+        return self.eta > other.eta
+
+    def __lt__(self, other):
+        return self.eta <= other.eta
+
     @property
     def warehouse_stock(self):
         return self.eta == 0
@@ -63,5 +70,10 @@ def allocate(order_line: OrderLine, batch: Batch):
     batch.lines.append(order_line)
 
 
-def select_batch_for_order_line():
-    pass
+def select_batch_for_order_line(order_line: OrderLine, batch_list: List[Batch]):
+    with contextlib.suppress(StopIteration):
+        return next(
+            b for b in sorted(batch_list)
+            if b.sku == order_line.sku
+            and b.available_quantity > order_line.quantity
+        )

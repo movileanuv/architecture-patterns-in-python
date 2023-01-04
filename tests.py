@@ -39,22 +39,28 @@ class AllocationTests(unittest.TestCase):
 
 
 class BatchSelectionTests(unittest.TestCase):
-    def setUp(self) -> None:
-        self.batch_tuple = (
-            Batch(reference="1", sku="A", quantity=1, lines=[], eta=0),
-        )
-
     def test_no_sku_match_finds_no_batch(self):
-        pass
+        batch = Batch(reference="batch-001", sku="TABLE", quantity=1, lines=[], eta=0)
+        order_line = OrderLine(orderid="order-001", sku="LAMP", quantity=1)
+        self.assertEqual(None, select_batch_for_order_line(order_line, [batch]))
 
     def test_not_enough_quantity_finds_no_batch(self):
-        pass
+        batch = Batch(reference="batch-001", sku="TABLE", quantity=1, lines=[], eta=0)
+        order_line = OrderLine(orderid="order-001", sku="TABLE", quantity=2)
+        self.assertEqual(None, select_batch_for_order_line(order_line, [batch]))
 
     def test_warehouse_stock_is_selected_first(self):
-        pass
+        in_stock_batch = Batch(reference="in-stock-batch", sku="TABLE", quantity=10, lines=[], eta=0)
+        shipment_batch = Batch(reference="in-stock-batch", sku="TABLE", quantity=10, lines=[], eta=100)
+        order_line = OrderLine(orderid="order-001", sku="TABLE", quantity=2)
+        self.assertEqual(in_stock_batch, select_batch_for_order_line(order_line, [in_stock_batch, shipment_batch]))
 
     def test_earliest_eta_is_allocated_first(self):
-        pass
+        earliest = Batch(reference="in-stock-batch", sku="TABLE", quantity=10, lines=[], eta=10)
+        medium = Batch(reference="in-stock-batch", sku="TABLE", quantity=10, lines=[], eta=100)
+        latest = Batch(reference="in-stock-batch", sku="TABLE", quantity=10, lines=[], eta=1000)
+        order_line = OrderLine(orderid="order-001", sku="TABLE", quantity=2)
+        self.assertEqual(earliest, select_batch_for_order_line(order_line, [latest, medium, earliest]))
 
 
 class BatchTests(unittest.TestCase):
