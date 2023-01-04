@@ -52,6 +52,8 @@ def allocate(order_line: OrderLine, batch: Batch):
         raise AllocationError()
     if order_line.quantity > batch.available_quantity:
         raise AllocationError()
+    if any(i.sku == order_line.sku for i in batch.lines):
+        return
     batch.lines.append(order_line)
 
 

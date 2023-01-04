@@ -31,7 +31,7 @@ class AllocationTests(unittest.TestCase):
         self.assertEqual(0, self.batch.available_quantity)
 
     def test_cannot_allocate_line_to_batch_twice(self):
-        order_line = OrderLine(order=self.order, sku="A", quantity=1)
+        order_line = OrderLine(order=self.order, sku="SMALL-TABLE", quantity=1)
         allocate(order_line, self.batch)
         allocate(order_line, self.batch)
         self.assertEqual(1, self.batch.available_quantity)
