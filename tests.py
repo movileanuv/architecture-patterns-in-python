@@ -5,12 +5,13 @@ from model import *
 
 class AllocationTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.batch = Batch(reference="1", sku="A", quantity=2, lines=[], eta=0)
-        self.order = Order(reference="z", lines=[])
+        self.batch = Batch(reference="batch-001", sku="SMALL-TABLE", quantity=2, lines=[], eta=0)
+        self.order = Order(reference="order-001", lines=[])
 
     def test_allocate_line_to_batch_with_different_sku_fails(self):
-        order_line = OrderLine(order=self.order, sku="B", quantity=1)
-        self.assertRaises(AllocationError, allocate(order_line, self.batch))
+        order_line = OrderLine(order=self.order, sku="LAMP", quantity=1)
+        with self.assertRaises(AllocationError):
+            allocate(order_line, self.batch)
 
     def test_allocate_line_to_batch_with_not_enough_quantity_fails(self):
         order_line = OrderLine(order=self.order, sku="A", quantity=3)

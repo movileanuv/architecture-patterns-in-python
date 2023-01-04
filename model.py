@@ -21,7 +21,7 @@ class Order:
     lines: list
 
 
-@dataclass
+@dataclass(frozen=True)
 class OrderLine:
     order: Order
     sku: str
@@ -46,7 +46,8 @@ class Batch:
 
 
 def allocate(order_line: OrderLine, batch: Batch):
-    pass
+    if order_line.sku != batch.sku:
+        raise AllocationError()
 
 
 def select_batch_for_order_line():
